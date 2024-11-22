@@ -1,16 +1,26 @@
-"use client"
+"use client";
 
+import { useState } from "react";
 
-import { useState } from 'react';
+interface Comment {
+  name: string;
+  text: string;
+}
 
 export default function CommentsSection() {
-  const [comments, setComments] = useState<string[]>([]);
-  const [newComment, setNewComment] = useState('');
+  const [comments, setComments] = useState<Comment[]>([
+    { name: "Alice", text: "This is an amazing post!" },
+    { name: "Bob", text: "I completely agree with this." },
+    { name: "Charlie", text: "Great insights, keep it up!" },
+  ]);
+  const [newComment, setNewComment] = useState("");
+  const [newName, setNewName] = useState("");
 
   const handleCommentSubmit = () => {
-    if (newComment.trim()) {
-      setComments([...comments, newComment]);
-      setNewComment('');
+    if (newComment.trim() && newName.trim()) {
+      setComments([...comments, { name: newName, text: newComment }]);
+      setNewComment("");
+      setNewName("");
     }
   };
 
@@ -20,7 +30,8 @@ export default function CommentsSection() {
       <ul className="space-y-4">
         {comments.map((comment, index) => (
           <li key={index} className="border p-2 rounded-lg">
-            {comment}
+            <p className="font-bold">{comment.name}</p>
+            <p>{comment.text}</p>
           </li>
         ))}
       </ul>
@@ -30,6 +41,13 @@ export default function CommentsSection() {
         <div className="flex flex-col space-y-4">
           <input
             type="text"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="border border-gray-300 rounded p-3 w-full"
+            placeholder="Your name"
+          />
+          <input
+            type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             className="border border-gray-300 rounded p-3 w-full"
@@ -37,7 +55,7 @@ export default function CommentsSection() {
           />
           <button
             onClick={handleCommentSubmit}
-            className="bg-blue-600 text-white  py-2 px-4  hover:bg-blue-400"
+            className="bg-blue-600 text-white py-2 px-4 hover:bg-blue-400"
           >
             Submit
           </button>
